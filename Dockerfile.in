@@ -1,0 +1,25 @@
+FROM archlinux AS x11-test
+
+# Install necessary packages
+RUN pacman -Sy
+RUN pacman -S --noconfirm xorg-xauth firefox pulseaudio
+# Create a group and a user
+RUN groupadd -g _GID_ _USER_
+RUN useradd -m -u _UID_ -g _USER_ -G audio,video,lp,users _USER_
+# Define environment variables for X11 and PulseAudio
+ENV DISPLAY=:0
+ENV PULSE_SERVER=unix:/tmp/pulse/native
+# Define an argument. This needs to be passed in --build-arg
+ARG cookie
+# Switch to the user and make necessary directories
+USER _UID_:_GID_
+RUN mkdir /tmp/.X11-unix
+RUN mkdir /tmp/pulse
+# Entry script
+RUN : > ~/run.sh
+RUN chmod +x ~/run.sh
+RUN echo "#!/bin/sh" >> ~/run.sh
+RUN echo "xauth add :0 MIT-MAGIC-COOKIE-1 $cookie" >> ~/run.sh
+RUN echo "firefox" >> ~/run.sh
+# Run entry script
+CMD ~/run.sh

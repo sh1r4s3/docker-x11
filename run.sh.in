@@ -1,0 +1,2 @@
+#!/bin/sh
+docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -v /run/user/_UID_/pulse/native:/tmp/pulse/native x11-test
