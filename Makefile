@@ -11,3 +11,6 @@ all:
 	chmod +x run.sh
 	@ echo Building docker container
 	docker build -t x11-test --build-arg cookie=${cookie} .
+
+clean:
+	@ rm -f Dockerfile run.sh
